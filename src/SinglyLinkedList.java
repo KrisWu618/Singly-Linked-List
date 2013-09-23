@@ -204,32 +204,20 @@ public class SinglyLinkedList {
     }
 
     public String toString() {
-        String stringView = "";
         if (head == null) {
-            stringView = "null";
+            return "null";
         } else {
-            SinglyLinkedNode pivot = head;
+            StringBuilder stringView = new StringBuilder();
 
-            while (pivot != null) {
-                stringView += pivot.toElementString();
-                pivot = pivot.next;
-            }
+            // using StringBuilder inside loops is more efficient
+            for (SinglyLinkedNode pivot = head; pivot != null; pivot = pivot.next)
+                stringView.append(pivot.toNodeString());
+
+            return stringView.toString();
         }
-        return stringView;
     }
 
     public String debugString() {
-        String stringView = "";
-        if (head == null) {
-            stringView = "null";
-        } else {
-            SinglyLinkedNode pivot = head;
-
-            while (pivot != null) {
-                stringView += pivot.toElementString();
-                pivot = pivot.next;
-            }
-        }
-        return stringView + " (size: " + size + ")";
+        return toString() + " (size: " + size + ")";
     }
 }
