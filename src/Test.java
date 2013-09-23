@@ -43,9 +43,9 @@ public class Test {
         list.remove();
         System.out.println(list);
 
-        list.add("***");
-        list.add("---");
-        list.add("...");
+        list.add("****");
+        list.add("----");
+        list.add("....");
         System.out.println(list.get(0));
         System.out.println(list.get(1));
         System.out.println(list.get(2));

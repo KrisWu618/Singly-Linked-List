@@ -1,16 +1,20 @@
 public class SinglyLinkedList {
     SinglyLinkedNode head;
+    int size;
 
     // Constructors
     public SinglyLinkedList() {
+        size = 0;
     }
 
     public SinglyLinkedList(SinglyLinkedNode head) {
         this.head = head;
+        size = 0;
     }
 
     public SinglyLinkedList(Object headData) {
         head = new SinglyLinkedNode(headData);
+        size = 0;
     }
 
 
@@ -23,21 +27,22 @@ public class SinglyLinkedList {
         e.next = head;
 
         head = e;
+        size++;
     }
 
     public void addLast(Object data) {
         if (head == null) {
             addFirst(data);
-            return;
-        }
+        } else {
+            SinglyLinkedNode pivot = head;
+            SinglyLinkedNode newElement = new SinglyLinkedNode(data);
 
-        SinglyLinkedNode pivot = head;
-        SinglyLinkedNode newElement = new SinglyLinkedNode(data);
-
-        while (pivot.next != null) {
-            pivot = pivot.next;
+            while (pivot.next != null) {
+                pivot = pivot.next;
+            }
+            pivot.next = newElement;
+            size++;
         }
-        pivot.next = newElement;
     }
 
     public boolean add(int index, Object data) {
@@ -60,6 +65,7 @@ public class SinglyLinkedList {
             SinglyLinkedNode temp = new SinglyLinkedNode(data);
             temp.next = pivot.next;
             pivot.next = temp;
+            size++;
         }
         return true;
     }
@@ -79,21 +85,14 @@ public class SinglyLinkedList {
 
 
     public int size() {
-        int count = 0;
-        SinglyLinkedNode pivot = head;
-
-        while (pivot != null) {
-            pivot = pivot.next;
-            count++;
-        }
-
-        return count;
+        return size;
     }
 
 
     public boolean removeFirst() {
         if (size() != 0) {
             head = head.next;
+            size--;
             return true;
         } else {
             return false;
@@ -105,6 +104,7 @@ public class SinglyLinkedList {
             return false;
         } else if (size() == 1) {
             head = null;
+            size--;
             return true;
         } else {
             SinglyLinkedNode pivot = head;
@@ -113,6 +113,7 @@ public class SinglyLinkedList {
                 pivot = pivot.next;
             }
             pivot.next = null;
+            size--;
             return true;
         }
     }
@@ -135,6 +136,7 @@ public class SinglyLinkedList {
             }
 
             pivot.next = pivot.next.next;
+            size--;
             return true;
         }
     }
@@ -194,6 +196,7 @@ public class SinglyLinkedList {
     public boolean clear() {
         if (head != null) {
             head = null;
+            size = 0;
             return true;
         } else {
             return false;
@@ -213,5 +216,20 @@ public class SinglyLinkedList {
             }
         }
         return stringView;
+    }
+
+    public String debugString() {
+        String stringView = "";
+        if (head == null) {
+            stringView = "null";
+        } else {
+            SinglyLinkedNode pivot = head;
+
+            while (pivot != null) {
+                stringView += pivot.toElementString();
+                pivot = pivot.next;
+            }
+        }
+        return stringView + " (size: " + size + ")";
     }
 }
