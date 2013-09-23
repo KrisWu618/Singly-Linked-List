@@ -2,8 +2,6 @@ public class Test {
 
     // Created to basically test SinglyLinkedList
     public static void main(String[] args) {
-        System.out.println("Let the game begin!\n");
-
         SinglyLinkedList list = new SinglyLinkedList();
 
         list.add(0);

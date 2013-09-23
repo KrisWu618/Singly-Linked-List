@@ -12,11 +12,11 @@ public class SinglyLinkedNode {
         this.next = next;
     }
 
-    public String toElementString() {
+    public String toNodeString() {
         String stringView = "";
 
         stringView += '[';
-        stringView += data.toString();
+        stringView += toString();
         stringView += ']';
 
         if (next != null) {
