@@ -30,5 +30,3 @@ public class SinglyLinkedNode {
         return data.toString();
     }
 }
-
-

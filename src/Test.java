@@ -9,12 +9,21 @@ public class Test {
         list.add(3);
         list.add(4);
         list.add(5);
-        System.out.println(list);
-
         list.add(3, 2);
+        System.out.println(list);
+        System.out.println(list.contains(0));
+        System.out.println(list.contains(2));
+        System.out.println(list.contains(5));
+        System.out.println();
+
         list.addFirst("First");
         list.addLast("Last");
         System.out.println(list);
+
+        list.set(0, "set");
+        list.set(7, "set");
+        System.out.println(list);
+
 
         list.removeFirst();
         list.removeLast();
@@ -42,8 +51,9 @@ public class Test {
         System.out.println(list);
 
         list.add("****");
-        list.add("----");
+        list.add("~~~~");
         list.add("....");
+        System.out.println(list);
         System.out.println(list.get(0));
         System.out.println(list.get(1));
         System.out.println(list.get(2));

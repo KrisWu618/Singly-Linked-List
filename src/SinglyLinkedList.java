@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 public class SinglyLinkedList {
     SinglyLinkedNode head;
     int size;
@@ -7,20 +9,35 @@ public class SinglyLinkedList {
         size = 0;
     }
 
+
     public SinglyLinkedList(SinglyLinkedNode head) {
         this.head = head;
         size = 0;
     }
+
 
     public SinglyLinkedList(Object headData) {
         head = new SinglyLinkedNode(headData);
         size = 0;
     }
 
+    // Methods
+    private void checkElementIndex(int index) {
+        if (index < 0 || size <= index)
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    }
+
+
+    private void checkPositionIndex(int index) {
+        if (index < 0 || size < index)
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+    }
+
 
     public void add(Object data) {
         addFirst(data);
     }
+
 
     public void addFirst(Object data) {
         SinglyLinkedNode e = new SinglyLinkedNode(data);
@@ -30,57 +47,47 @@ public class SinglyLinkedList {
         size++;
     }
 
+
     public void addLast(Object data) {
-        if (head == null) {
+        if (head == null)
             addFirst(data);
-        } else {
-            SinglyLinkedNode pivot = head;
-            SinglyLinkedNode newElement = new SinglyLinkedNode(data);
+        else {
+            SinglyLinkedNode x = head;
 
-            while (pivot.next != null) {
-                pivot = pivot.next;
-            }
-            pivot.next = newElement;
+            while (x.next != null)
+                x = x.next;
+
+            x.next = new SinglyLinkedNode(data);
             size++;
         }
     }
 
-    public boolean add(int index, Object data) {
-        if (index < 0 || size() < index) {
-            return false;
-        }
 
-        if (index == 0) {
+    public void add(int index, Object data) {
+        checkPositionIndex(index);
+
+        if (index == 0)
             addFirst(data);
-        } else if (index == size()) {
-            addLast(data);
-        } else {
+        else {
+            SinglyLinkedNode x = head;
 
-            SinglyLinkedNode pivot = head;
+            for (int i = 0; i < index - 1; i++)
+                x = x.next;
 
-            for (int i = 0; i < index - 1; i++) {
-                pivot = pivot.next;
-            }
-
-            SinglyLinkedNode temp = new SinglyLinkedNode(data);
-            temp.next = pivot.next;
-            pivot.next = temp;
+            x.next = new SinglyLinkedNode(data, x.next);
             size++;
         }
-        return true;
     }
 
-    public SinglyLinkedNode get(int index) {
-        if (index < 0 || size() <= index) {
-            return null;
-        }
 
-        SinglyLinkedNode pivot = head;
-        for (int i = 0; i < index; i++) {
-            pivot = pivot.next;
-        }
+    public Object get(int index) {
+        checkElementIndex(index);
 
-        return pivot;
+        SinglyLinkedNode x = head;
+        for (int i = 0; i < index; i++)
+            x = x.next;
+
+        return x.data;
     }
 
 
@@ -89,119 +96,125 @@ public class SinglyLinkedList {
     }
 
 
-    public boolean removeFirst() {
-        if (size() != 0) {
-            head = head.next;
-            size--;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean removeLast() {
-        if (size() == 0) {
-            return false;
-        } else if (size() == 1) {
-            head = null;
-            size--;
-            return true;
-        } else {
-            SinglyLinkedNode pivot = head;
-
-            while (pivot.next.next != null) {
-                pivot = pivot.next;
-            }
-            pivot.next = null;
-            size--;
-            return true;
-        }
-    }
-
-    public boolean remove() {
+    public Object remove() {
         return removeFirst();
     }
 
-    public boolean remove(int index) {
-        SinglyLinkedNode pivot = head;
 
-        if (index < 0 || size() <= index) {
-            return false;
-        } else if (index == 0) {
-            removeFirst();
-            return true;
-        } else {
-            for (int i = 0; i < index - 1; i++) {
-                pivot = pivot.next;
-            }
-
-            pivot.next = pivot.next.next;
+    public Object removeFirst() {
+        if (size == 0)
+            throw new NoSuchElementException();
+        else {
+            Object temp = head.data;
+            head = head.next;
             size--;
-            return true;
+            return temp;
         }
     }
 
-    public boolean remove(Object data) {
-        return removeFirst(data);
+
+    public Object removeLast() {
+        if (size <= 1)
+            return removeFirst();
+        else {
+            SinglyLinkedNode x = head;
+
+            while (x.next.next != null)
+                x = x.next;
+
+            Object temp = x.next.data;
+            x.next = null;
+            size--;
+            return temp;
+        }
     }
 
-    public boolean removeFirst(Object data) {
-        SinglyLinkedNode pivot = head;
 
-        for (int i = 0; i < size(); i++) {
-            if (pivot.data.equals(data)) {
+    public void remove(int index) {
+        checkElementIndex(index);
+
+        if (index == 0)
+            removeFirst();
+        else {
+            SinglyLinkedNode x = head;
+            for (int i = 0; i < index - 1; i++)
+                x = x.next;
+
+            x.next = x.next.next;
+            size--;
+        }
+    }
+
+
+    public void remove(Object data) {
+        removeFirst(data);
+    }
+
+
+    public void removeFirst(Object data) {
+        SinglyLinkedNode x = head;
+
+        for (int i = 0; i < size; i++, x = x.next)
+            if (x.data.equals(data)) {
                 remove(i);
+                return;
+            }
+    }
+
+
+    public void removeLast(Object data) {
+        int lastOccurrence = -1;
+        SinglyLinkedNode x = head;
+
+        for (int i = 0; i < size; i++, x = x.next)
+            if (x.data.equals(data))
+                lastOccurrence = i;
+
+        if (lastOccurrence != -1)
+            remove(lastOccurrence);
+    }
+
+
+    // TODO: impvove this O(n^2) method
+    public void removeAll(Object data) {
+        SinglyLinkedNode x = head;
+
+        for (int i = 0; i < size; x = x.next)
+            if (x.data.equals(data))
+                remove(i);
+            else
+                i++;
+    }
+
+
+    public void clear() {
+        head = null;
+        size = 0;
+    }
+
+
+    public Object set(int index, Object newData) {
+        checkElementIndex(index);
+
+        SinglyLinkedNode x = head;
+        for (int i = 0; i < index; i++)
+            x = x.next;
+
+        Object temp = x.data;
+        x.data = newData;
+        return temp;
+    }
+
+
+    public boolean contains(Object o) {
+        for (SinglyLinkedNode x = head; x != null; x = x.next) {
+            if (x.data.equals(o)) {
                 return true;
-            } else {
-                pivot = pivot.next;
             }
         }
         return false;
     }
 
-    public boolean removeLast(Object data) {
-        SinglyLinkedNode pivot = head;
-        int target = -1;
-
-        for (int i = 0; i < size(); i++, pivot = pivot.next) {
-            if (pivot.data.equals(data)) {
-                target = i;
-            }
-        }
-
-        if (target != -1) {
-            remove(target);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean removeAll(Object data) {
-        SinglyLinkedNode pivot = head;
-        boolean isDeleted = false;
-
-        for (int i = 0; i < size(); pivot = pivot.next) {
-            if (pivot.data.equals(data)) {
-                remove(i);
-                isDeleted = true;
-            } else {
-                i++;
-            }
-        }
-
-        return isDeleted;
-    }
-
-    public boolean clear() {
-        if (head != null) {
-            head = null;
-            size = 0;
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public String toString() {
         if (head == null) {
@@ -209,13 +222,14 @@ public class SinglyLinkedList {
         } else {
             StringBuilder stringView = new StringBuilder();
 
-            // using StringBuilder inside loops is more efficient
-            for (SinglyLinkedNode pivot = head; pivot != null; pivot = pivot.next)
-                stringView.append(pivot.toNodeString());
+            // using StringBuilder inside loops is very efficient
+            for (SinglyLinkedNode x = head; x != null; x = x.next)
+                stringView.append(x.toNodeString());
 
             return stringView.toString();
         }
     }
+
 
     public String debugString() {
         return toString() + " (size: " + size + ")";
